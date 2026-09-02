@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuel Management - Petrol Pump Management System</title>
+</head>
+<body>
+    <div th:replace="layout :: content">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="fas fa-gas-pump"></i> Fuel Management</h2>
+                <p class="text-muted">Manage fuel types, prices, and stock levels</p>
+            </div>
+            <a th:href="@{/fuels/new}" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Add New Fuel
+            </a>
+        </div>
+
+        <!-- Alerts -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Low Stock Alert -->
+        <div th:if="${not lowStockFuels.isEmpty()}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> 
+            <strong>Low Stock Alert!</strong> The following fuels are running low:
+            <ul class="mb-0 mt-2">
+                <li th:each="fuel : ${lowStockFuels}">
+                    <span th:text="${fuel.name}"></span> - <span th:text="${fuel.quantity} + 'L'"></span> (Threshold: <span th:text="${fuel.lowStockThreshold} + 'L'"></span>)
+                </li>
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Fuels Table -->
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Fuel Name</th>
+                                <th>Price (₹/L)</th>
+                                <th>Current Stock (L)</th>
+                                <th>Low Stock Threshold (L)</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="fuel : ${fuels}">
+                                <td th:text="${fuel.name}">Petrol</td>
+                                <td th:text="'₹' + ${fuel.price}">₹95.50</td>
+                                <td th:text="${fuel.quantity}">1000.00</td>
+                                <td th:text="${fuel.lowStockThreshold}">200.00</td>
+                                <td>
+                                    <span th:if="${fuel.active}" class="badge bg-success">Active</span>
+                                    <span th:unless="${fuel.active}" class="badge bg-secondary">Inactive</span>
+                                    <span th:if="${fuel.isLowStock()}" class="badge bg-danger ms-1">Low Stock</span>
+                                </td>
+                                <td>
+                                    <a th:href="@{/fuels/edit/{id}(id=${fuel.id})}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a th:href="@{/fuels/delete/{id}(id=${fuel.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this fuel?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${fuels.isEmpty()}">
+                                <td colspan="6" class="text-center text-muted">No fuels found. Add your first fuel type!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

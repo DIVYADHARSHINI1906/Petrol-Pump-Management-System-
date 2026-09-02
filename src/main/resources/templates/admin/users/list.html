@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - Petrol Pump Management System</title>
+</head>
+<body>
+    <div th:replace="layout :: content">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="fas fa-user-cog"></i> User Management</h2>
+                <p class="text-muted">Manage system users and access</p>
+            </div>
+            <a th:href="@{/admin/users/new}" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i> Add New User
+            </a>
+        </div>
+
+        <!-- Alerts -->
+        <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> <span th:text="${success}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Users Table -->
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Username</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Created</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="user : ${users}">
+                                <td th:text="${user.username}">admin</td>
+                                <td th:text="${user.fullName}">Admin User</td>
+                                <td th:text="${user.email}">admin@example.com</td>
+                                <td>
+                                    <span class="badge bg-primary" th:text="${user.role}">ADMIN</span>
+                                </td>
+                                <td>
+                                    <span th:if="${user.active}" class="badge bg-success">Active</span>
+                                    <span th:unless="${user.active}" class="badge bg-secondary">Inactive</span>
+                                </td>
+                                <td th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd')}">2023-01-01</td>
+                                <td>
+                                    <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" class="btn btn-sm btn-info">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a th:href="@{/admin/users/delete/{id}(id=${user.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this user?')">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <tr th:if="${users.isEmpty()}">
+                                <td colspan="7" class="text-center text-muted">No users found. Add your first user!</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

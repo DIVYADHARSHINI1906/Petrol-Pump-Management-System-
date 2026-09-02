@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Petrol Pump Management System</title>
+</head>
+<body>
+    <div th:replace="layout :: content">
+        <div class="page-header">
+            <h2><i class="fas fa-tachometer-alt"></i> Dashboard</h2>
+            <p class="text-muted">Welcome back, <span th:text="${username}"></span>!</p>
+        </div>
+
+        <!-- Alerts -->
+        <div th:if="${dashboardData.lowStockCount > 0}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> 
+            <strong>Low Stock Alert!</strong> You have <span th:text="${dashboardData.lowStockCount}"></span> fuel type(s) running low on stock.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted">Today's Sales</h6>
+                                <h3 th:text="'₹' + ${dashboardData.todayTotalSales}">₹0</h3>
+                            </div>
+                            <div class="text-primary">
+                                <i class="fas fa-rupee-sign fa-2x"></i>
+                            </div>
+                        </div>
+                        <small class="text-muted"><span th:text="${dashboardData.todayTransactions}"></span> transactions today</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted">Today's Profit</h6>
+                                <h3 th:text="'₹' + ${dashboardData.todayProfit}">₹0</h3>
+                            </div>
+                            <div class="text-success">
+                                <i class="fas fa-chart-line fa-2x"></i>
+                            </div>
+                        </div>
+                        <small class="text-muted">Sales - Expenses</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card warning">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted">Fuel Types</h6>
+                                <h3 th:text="${dashboardData.totalFuels}">0</h3>
+                            </div>
+                            <div class="text-warning">
+                                <i class="fas fa-gas-pump fa-2x"></i>
+                            </div>
+                        </div>
+                        <small class="text-muted"><span th:text="${dashboardData.lowStockCount}"></span> low stock alerts</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card stat-card info">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted">Customers</h6>
+                                <h3 th:text="${dashboardData.totalCustomers}">0</h3>
+                            </div>
+                            <div class="text-info">
+                                <i class="fas fa-users fa-2x"></i>
+                            </div>
+                        </div>
+                        <small class="text-muted"><span th:text="${dashboardData.totalEmployees}"></span> employees</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monthly Overview -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fas fa-calendar-alt"></i> Monthly Overview</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <div>
+                                <h6 class="text-muted">Total Sales</h6>
+                                <h4 class="text-primary" th:text="'₹' + ${dashboardData.monthlySales}">₹0</h4>
+                            </div>
+                            <div>
+                                <h6 class="text-muted">Transactions</h6>
+                                <h4 class="text-info" th:text="${dashboardData.monthlyTransactions}">0</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Low Stock Alerts</h5>
+                    </div>
+                    <div class="card-body">
+                        <div th:if="${dashboardData.lowStockAlerts.isEmpty()}" class="text-center text-muted">
+                            <i class="fas fa-check-circle fa-2x text-success"></i>
+                            <p class="mt-2">All fuel stocks are healthy!</p>
+                        </div>
+                        <div th:if="${not dashboardData.lowStockAlerts.isEmpty()}">
+                            <ul class="list-group list-group-flush">
+                                <li th:each="fuel : ${dashboardData.lowStockAlerts}" class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span th:text="${fuel.name}">Petrol</span>
+                                    <span class="badge bg-danger" th:text="${fuel.quantity} + 'L'">100L</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-white">
+                        <h5 class="mb-0"><i class="fas fa-bolt"></i> Quick Actions</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-3">
+                                <a th:href="@{/sales/new}" class="btn btn-primary w-100">
+                                    <i class="fas fa-plus-circle"></i> New Sale
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <a th:href="@{/fuels/new}" class="btn btn-success w-100">
+                                    <i class="fas fa-gas-pump"></i> Add Fuel
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <a th:href="@{/customers/new}" class="btn btn-info w-100">
+                                    <i class="fas fa-user-plus"></i> Add Customer
+                                </a>
+                            </div>
+                            <div class="col-md-3 mb-3">
+                                <a th:href="@{/expenses/new}" class="btn btn-warning w-100">
+                                    <i class="fas fa-receipt"></i> Add Expense
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${employee.id != null ? 'Edit Employee' : 'Add New Employee'}">Employee Form</title>
+</head>
+<body>
+    <div th:replace="layout :: content">
+        <div class="page-header">
+            <h2><i class="fas fa-user-tie"></i> <span th:text="${employee.id != null ? 'Edit Employee' : 'Add New Employee'}">Add New Employee</span></h2>
+            <p class="text-muted" th:text="${employee.id != null ? 'Update employee information' : 'Add a new employee to your team'}"></p>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <form th:action="${employee.id != null ? '/employees/update/' + ${employee.id} : '/employees/save'}" 
+                      th:object="${employee}" method="post">
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Employee Name</label>
+                            <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                            <div th:if="${#fields.hasErrors('name')}" class="text-danger small" th:errors="*{name}"></div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="position" class="form-label">Position</label>
+                            <input type="text" class="form-control" id="position" th:field="*{position}" required>
+                            <div th:if="${#fields.hasErrors('position')}" class="text-danger small" th:errors="*{position}"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" th:field="*{email}" required>
+                            <div th:if="${#fields.hasErrors('email')}" class="text-danger small" th:errors="*{email}"></div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="phoneNumber" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" id="phoneNumber" th:field="*{phoneNumber}" placeholder="9876543210">
+                            <div th:if="${#fields.hasErrors('phoneNumber')}" class="text-danger small" th:errors="*{phoneNumber}"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="salary" class="form-label">Salary (₹)</label>
+                            <input type="number" step="0.01" class="form-control" id="salary" th:field="*{salary}">
+                            <div th:if="${#fields.hasErrors('salary')}" class="text-danger small" th:errors="*{salary}"></div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="joiningDate" class="form-label">Joining Date</label>
+                            <input type="datetime-local" class="form-control" id="joiningDate" th:field="*{joiningDate}">
+                            <div th:if="${#fields.hasErrors('joiningDate')}" class="text-danger small" th:errors="*{joiningDate}"></div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="active" th:field="*{active}">
+                        <label class="form-check-label" for="active">Active</label>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> <span th:text="${employee.id != null ? 'Update' : 'Save'}">Save</span>
+                        </button>
+                        <a th:href="@{/employees}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

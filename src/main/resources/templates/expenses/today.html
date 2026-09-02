@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Today's Expenses - Petrol Pump Management System</title>
+</head>
+<body>
+    <div th:replace="layout :: content">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="fas fa-calendar-day"></i> Today's Expenses</h2>
+                <p class="text-muted">Expenses recorded today</p>
+            </div>
+            <a th:href="@{/expenses}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to All Expenses
+            </a>
+        </div>
+
+        <!-- Summary Card -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="text-muted">Today's Total Expenses</h6>
+                        <h3 class="text-danger" th:text="'₹' + ${totalExpenses}">₹0</h3>
+                    </div>
+                    <div class="text-danger">
+                        <i class="fas fa-money-bill-wave fa-2x"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Today's Expenses Table -->
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Time</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Amount (₹)</th>
+                                <th>Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="expense : ${expenses}">
+                                <td th:text="${#temporals.format(expense.expenseDate, 'HH:mm')}">10:30</td>
+                                <td>
+                                    <span class="badge bg-secondary" th:text="${expense.expenseType}">MAINTENANCE</span>
+                                </td>
+                                <td th:text="${expense.description}">Pump maintenance</td>
+                                <td th:text="${expense.amount}">5000.00</td>
+                                <td th:text="${expense.remarks}">Regular servicing</td>
+                            </tr>
+                            <tr th:if="${expenses.isEmpty()}">
+                                <td colspan="5" class="text-center text-muted">No expenses recorded today yet</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

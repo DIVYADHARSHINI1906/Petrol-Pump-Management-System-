@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profit Report - Petrol Pump Management System</title>
+</head>
+<body>
+    <div th:replace="layout :: content">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="fas fa-coins"></i> Profit Report</h2>
+                <p class="text-muted">Analyze profit and loss</p>
+            </div>
+            <a th:href="@{/reports}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Reports
+            </a>
+        </div>
+
+        <!-- Date Filter Form -->
+        <div class="card mb-4">
+            <div class="card-body">
+                <form th:action="@{/reports/profit}" method="get" class="row g-3">
+                    <div class="col-md-4">
+                        <label for="startDate" class="form-label">Start Date</label>
+                        <input type="datetime-local" class="form-control" id="startDate" name="startDate" th:value="${startDate}">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="endDate" class="form-label">End Date</label>
+                        <input type="datetime-local" class="form-control" id="endDate" name="endDate" th:value="${endDate}">
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button type="submit" class="btn btn-primary w-100">
+                            <i class="fas fa-filter"></i> Generate Report
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="card stat-card success">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted">Total Sales</h6>
+                                <h3 th:text="'₹' + ${totalSales}">₹0</h3>
+                            </div>
+                            <div class="text-success">
+                                <i class="fas fa-arrow-up fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card danger">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted">Total Expenses</h6>
+                                <h3 th:text="'₹' + ${totalExpenses}">₹0</h3>
+                            </div>
+                            <div class="text-danger">
+                                <i class="fas fa-arrow-down fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card" th:classappend="${profit >= 0} ? 'success' : 'danger'">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="text-muted">Net Profit/Loss</h6>
+                                <h3 th:text="'₹' + ${profit}" th:class="${profit >= 0} ? 'text-success' : 'text-danger'">₹0</h3>
+                            </div>
+                            <div th:class="${profit >= 0} ? 'text-success' : 'text-danger'">
+                                <i class="fas fa-chart-line fa-2x"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profit Summary -->
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Profit Summary</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table">
+                            <tr>
+                                <td><strong>Total Revenue (Sales)</strong></td>
+                                <td class="text-end" th:text="'₹' + ${totalSales}">₹0</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Total Expenses</strong></td>
+                                <td class="text-end text-danger" th:text="'-₹' + ${totalExpenses}">-₹0</td>
+                            </tr>
+                            <tr class="table-light">
+                                <td><strong>Net Profit/Loss</strong></td>
+                                <td class="text-end" th:class="${profit >= 0} ? 'text-success' : 'text-danger'" th:text="'₹' + ${profit}">₹0</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <div th:if="${profit >= 0}" class="alert alert-success">
+                            <i class="fas fa-check-circle"></i> 
+                            <strong>Profitable Period!</strong> Your business generated a profit of ₹<span th:text="${profit}"></span> during this period.
+                        </div>
+                        <div th:if="${profit < 0}" class="alert alert-danger">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            <strong>Loss Period!</strong> Your business incurred a loss of ₹<span th:text="${#numbers.formatDecimal(profit, 1, 2).replace('-', '')}"></span> during this period.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

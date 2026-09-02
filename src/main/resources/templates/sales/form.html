@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Sale - Petrol Pump Management System</title>
+</head>
+<body>
+    <div th:replace="layout :: content">
+        <div class="page-header">
+            <h2><i class="fas fa-cash-register"></i> New Sale</h2>
+            <p class="text-muted">Record a new fuel sale</p>
+        </div>
+
+        <!-- Alerts -->
+        <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-circle"></i> <span th:text="${error}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <form th:action="@{/sales/save}" th:object="${sale}" method="post">
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="fuel" class="form-label">Fuel Type</label>
+                            <select class="form-select" id="fuel" th:field="*{fuel.id}" required>
+                                <option value="">Select Fuel</option>
+                                <option th:each="fuel : ${fuels}" 
+                                        th:value="${fuel.id}" 
+                                        th:text="${fuel.name + ' - ₹' + fuel.price + '/L (Stock: ' + fuel.quantity + 'L)'}">
+                                    Petrol - ₹95.50/L (Stock: 1000L)
+                                </option>
+                            </select>
+                            <div th:if="${#fields.hasErrors('fuel')}" class="text-danger small" th:errors="*{fuel}"></div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="employee" class="form-label">Employee</label>
+                            <select class="form-select" id="employee" th:field="*{employee.id}" required>
+                                <option value="">Select Employee</option>
+                                <option th:each="employee : ${employees}" 
+                                        th:value="${employee.id}" 
+                                        th:text="${employee.name + ' - ' + employee.position}">
+                                    John Doe - Pump Attendant
+                                </option>
+                            </select>
+                            <div th:if="${#fields.hasErrors('employee')}" class="text-danger small" th:errors="*{employee}"></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="quantity" class="form-label">Quantity (Liters)</label>
+                            <input type="number" step="0.01" class="form-control" id="quantity" th:field="*{quantity}" required oninput="calculateTotal()">
+                            <div th:if="${#fields.hasErrors('quantity')}" class="text-danger small" th:errors="*{quantity}"></div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="pricePerUnit" class="form-label">Price per Liter (₹)</label>
+                            <input type="number" step="0.01" class="form-control" id="pricePerUnit" th:field="*{pricePerUnit}" required oninput="calculateTotal()">
+                            <div th:if="${#fields.hasErrors('pricePerUnit')}" class="text-danger small" th:errors="*{pricePerUnit}"></div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="totalAmount" class="form-label">Total Amount (₹)</label>
+                            <input type="number" step="0.01" class="form-control bg-light" id="totalAmount" th:field="*{totalAmount}" readonly>
+                        </div>
+                    </div>
+
+                    <hr>
+                    <h5>Customer Information (Optional)</h5>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="vehicleNumber" class="form-label">Vehicle Number</label>
+                            <input type="text" class="form-control" id="vehicleNumber" th:field="*{customer.vehicleNumber}" placeholder="MH12AB1234">
+                            <div th:if="${#fields.hasErrors('customer.vehicleNumber')}" class="text-danger small" th:errors="*{customer.vehicleNumber}"></div>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="customerName" class="form-label">Customer Name</label>
+                            <input type="text" class="form-control" id="customerName" th:field="*{customer.customerName}">
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="phoneNumber" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" id="phoneNumber" th:field="*{customer.phoneNumber}">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="paymentMethod" class="form-label">Payment Method</label>
+                            <select class="form-select" id="paymentMethod" th:field="*{paymentMethod}">
+                                <option value="CASH">Cash</option>
+                                <option value="CARD">Card</option>
+                                <option value="UPI">UPI</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="remarks" class="form-label">Remarks</label>
+                            <input type="text" class="form-control" id="remarks" th:field="*{remarks}">
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Complete Sale
+                        </button>
+                        <a th:href="@{/sales}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            function calculateTotal() {
+                const quantity = parseFloat(document.getElementById('quantity').value) || 0;
+                const pricePerUnit = parseFloat(document.getElementById('pricePerUnit').value) || 0;
+                const total = quantity * pricePerUnit;
+                document.getElementById('totalAmount').value = total.toFixed(2);
+            }
+
+            // Auto-fill price when fuel is selected
+            document.getElementById('fuel').addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const text = selectedOption.text;
+                const priceMatch = text.match(/₹(\d+\.\d+)/);
+                if (priceMatch) {
+                    document.getElementById('pricePerUnit').value = priceMatch[1];
+                    calculateTotal();
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>

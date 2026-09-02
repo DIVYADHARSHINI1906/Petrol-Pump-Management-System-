@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${fuel.id != null ? 'Edit Fuel' : 'Add New Fuel'}">Fuel Form</title>
+</head>
+<body>
+    <div th:replace="layout :: content">
+        <div class="page-header">
+            <h2><i class="fas fa-gas-pump"></i> <span th:text="${fuel.id != null ? 'Edit Fuel' : 'Add New Fuel'}">Add New Fuel</span></h2>
+            <p class="text-muted" th:text="${fuel.id != null ? 'Update fuel information' : 'Add a new fuel type to your inventory'}"></p>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <form th:action="${fuel.id != null ? '/fuels/update/' + ${fuel.id} : '/fuels/save'}" 
+                      th:object="${fuel}" method="post">
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Fuel Name</label>
+                        <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                        <div th:if="${#fields.hasErrors('name')}" class="text-danger small" th:errors="*{name}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price per Liter (₹)</label>
+                        <input type="number" step="0.01" class="form-control" id="price" th:field="*{price}" required>
+                        <div th:if="${#fields.hasErrors('price')}" class="text-danger small" th:errors="*{price}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label">Current Quantity (Liters)</label>
+                        <input type="number" step="0.01" class="form-control" id="quantity" th:field="*{quantity}" required>
+                        <div th:if="${#fields.hasErrors('quantity')}" class="text-danger small" th:errors="*{quantity}"></div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="lowStockThreshold" class="form-label">Low Stock Threshold (Liters)</label>
+                        <input type="number" step="0.01" class="form-control" id="lowStockThreshold" th:field="*{lowStockThreshold}" required>
+                        <div class="form-text">Alert will be triggered when stock falls below this level</div>
+                        <div th:if="${#fields.hasErrors('lowStockThreshold')}" class="text-danger small" th:errors="*{lowStockThreshold}"></div>
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="active" th:field="*{active}">
+                        <label class="form-check-label" for="active">Active</label>
+                    </div>
+
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> <span th:text="${fuel.id != null ? 'Update' : 'Save'}">Save</span>
+                        </button>
+                        <a th:href="@{/fuels}" class="btn btn-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to List
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

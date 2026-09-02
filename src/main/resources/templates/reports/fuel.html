@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuel Stock Report - Petrol Pump Management System</title>
+</head>
+<body>
+    <div th:replace="layout :: content">
+        <div class="page-header d-flex justify-content-between align-items-center">
+            <div>
+                <h2><i class="fas fa-gas-pump"></i> Fuel Stock Report</h2>
+                <p class="text-muted">Monitor fuel inventory levels</p>
+            </div>
+            <a th:href="@{/reports}" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Reports
+            </a>
+        </div>
+
+        <!-- Low Stock Alert -->
+        <div th:if="${not lowStockFuels.isEmpty()}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle"></i> 
+            <strong>Low Stock Alert!</strong> <span th:text="${lowStockFuels.size()}"></span> fuel type(s) are running low on stock.
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Fuel Stock Table -->
+        <div class="card">
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Fuel Name</th>
+                                <th>Current Stock (L)</th>
+                                <th>Price (₹/L)</th>
+                                <th>Low Stock Threshold (L)</th>
+                                <th>Status</th>
+                                <th>Stock Value (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="fuel : ${fuels}">
+                                <td th:text="${fuel.name}">Petrol</td>
+                                <td th:text="${fuel.quantity}">1000.00</td>
+                                <td th:text="${fuel.price}">95.50</td>
+                                <td th:text="${fuel.lowStockThreshold}">200.00</td>
+                                <td>
+                                    <span th:if="${fuel.active}" class="badge bg-success">Active</span>
+                                    <span th:unless="${fuel.active}" class="badge bg-secondary">Inactive</span>
+                                    <span th:if="${fuel.isLowStock()}" class="badge bg-danger ms-1">Low Stock</span>
+                                </td>
+                                <td th:text="${fuel.quantity.multiply(fuel.price)}">₹95,500.00</td>
+                            </tr>
+                            <tr th:if="${fuels.isEmpty()}">
+                                <td colspan="6" class="text-center text-muted">No fuels found in inventory</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary -->
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <div class="card stat-card">
+                    <div class="card-body">
+                        <h6 class="text-muted">Total Fuel Types</h6>
+                        <h3 th:text="${fuels.size()}">0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card warning">
+                    <div class="card-body">
+                        <h6 class="text-muted">Low Stock Alerts</h6>
+                        <h3 th:text="${lowStockFuels.size()}">0</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card stat-card success">
+                    <div class="card-body">
+                        <h6 class="text-muted">Total Stock Value</h6>
+                        <h3 th:text="'₹' + ${totalStockValue}">₹0</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
