@@ -1,322 +1,90 @@
-# Petrol Pump Management System
-
-A comprehensive web-based Petrol Pump Management System built with Spring Boot, Thymeleaf, and MySQL. This system helps manage fuel inventory, sales/billing, customers, employees, expenses, and generate reports.
-
-## 🛠️ Technologies Used
-
-- **Java 8** - Core programming language
-- **Spring Boot 2.7.18** - Backend web application framework
-- **Spring MVC** - Request handling and application architecture
-- **Spring Data JPA / Hibernate** - Database operations and ORM
-- **Spring Security** - Authentication and authorization
-- **Thymeleaf** - Dynamic HTML pages / frontend
-- **MySQL** - Database management
-- **Bootstrap 5** - Styling and UI framework
-- **Font Awesome** - Icons
-- **Maven** - Dependency and project management
-
-## 📋 Features
-
-### 1. Authentication & Authorization
-- User login/logout functionality
-- Role-based access control (Admin/Staff)
-- Secure password encryption with BCrypt
-- User management (Admin only)
-
-### 2. Dashboard
-- Overview of petrol pump operations
-- Today's sales and profit summary
-- Monthly statistics
-- Low stock alerts
-- Quick access to major modules
-
-### 3. Fuel Management
-- Add and update fuel types (Petrol, Diesel, etc.)
-- Maintain current fuel quantity and price
-- Automatic low-stock alerts
-- Fuel stock tracking
-
-### 4. Sales & Billing
-- Record fuel sales with automatic bill calculation
-- Customer information capture (optional)
-- Multiple payment methods (Cash, Card, UPI)
-- Automatic fuel stock reduction
-- Today's sales view
-
-### 5. Customer Management
-- Store customer and vehicle details
-- Vehicle number tracking
-- Customer search functionality
-- Customer history tracking
-
-### 6. Employee Management
-- Add, update, and remove employee details
-- Employee position and salary tracking
-- Contact information management
-- Employee search functionality
-
-### 7. Expense Management
-- Record various expenses (Maintenance, Electricity, Salary, etc.)
-- Expense categorization
-- Today's expenses view
-- Expense tracking for financial monitoring
-
-### 8. Reports
-- **Sales Report**: Generate sales reports with date range filtering
-- **Expense Report**: Track expenses with date range filtering
-- **Fuel Stock Report**: Monitor fuel inventory levels
-- **Profit Report**: Analyze profit and loss
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Java 8 or higher
-- Maven 3.6+
-- MySQL 5.7+ or MySQL 8.0+
-- IDE (NetBeans, IntelliJ IDEA, or Eclipse)
-
-### Database Setup
-
-1. Create a MySQL database:
-```sql
-CREATE DATABASE petrol_pump_db;
-```
-
-2. Update database credentials in `src/main/resources/application.properties`:
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/petrol_pump_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-spring.datasource.username=your_username
-spring.datasource.password=your_password
-```
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd petrol-pump-management
-```
-
-2. Build the project using Maven:
-```bash
-mvn clean install
-```
-
-3. Run the application:
-```bash
-mvn spring-boot:run
-```
-
-Or run the main class `PetrolPumpManagementApplication` from your IDE.
-
-### Default Users
-
-The application automatically creates default users on first run:
-
-- **Admin User**
-  - Username: `admin`
-  - Password: `admin123`
-  - Role: ADMIN
-
-- **Staff User**
-  - Username: `staff`
-  - Password: `staff123`
-  - Role: STAFF
-
-### Default Data
-
-The application also initializes sample data:
-- Fuel types: Petrol (₹95.50/L), Diesel (₹85.00/L)
-- Sample employee: John Doe (Pump Attendant)
-
-## 📁 Project Structure
-
-```
-petrol-pump-management/
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   └── com/
-│   │   │       └── petrolpump/
-│   │   │           ├── config/          # Configuration classes
-│   │   │           ├── controller/      # Spring MVC controllers
-│   │   │           ├── model/           # JPA entities
-│   │   │           ├── repository/      # Spring Data JPA repositories
-│   │   │           ├── service/         # Business logic layer
-│   │   │           └── PetrolPumpManagementApplication.java
-│   │   └── resources/
-│   │       ├── static/                 # CSS, JS, images
-│   │       ├── templates/              # Thymeleaf templates
-│   │       └── application.properties   # Application configuration
-│   └── test/
-└── pom.xml                             # Maven configuration
-```
-
-## 🔧 Configuration
-
-### Application Properties
-
-Key configuration options in `src/main/resources/application.properties`:
-
-```properties
-# Server Configuration
-server.port=8080
-
-# Database Configuration
-spring.datasource.url=jdbc:mysql://localhost:3306/petrol_pump_db
-spring.datasource.username=root
-spring.datasource.password=root
-
-# JPA Configuration
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-
-# Thymeleaf Configuration
-spring.thymeleaf.cache=false
-```
-
-## 🎯 Usage
-
-### 1. Login
-- Access the application at `http://localhost:8080`
-- Login with default credentials or create new users
-
-### 2. Dashboard
-- View overview of operations
-- Check low stock alerts
-- Access quick actions
-
-### 3. Fuel Management
-- Navigate to Fuel Management
-- Add new fuel types with price and stock
-- Update fuel prices and quantities
-- Monitor low stock alerts
-
-### 4. Sales & Billing
-- Navigate to Sales & Billing
-- Click "New Sale"
-- Select fuel type and enter quantity
-- Optionally add customer information
-- Complete the sale (stock automatically reduces)
-
-### 5. Reports
-- Navigate to Reports section
-- Generate sales, expense, fuel stock, or profit reports
-- Filter by date range
-- Analyze business performance
-
-## 🔒 Security
-
-- Passwords are encrypted using BCrypt
-- Role-based access control (Admin/Staff)
-- CSRF protection enabled
-- Session management
-
-## 📊 Database Schema
-
-### Users Table
-- User authentication and authorization
-- Roles: ADMIN, STAFF
-
-### Fuels Table
-- Fuel types, prices, and stock levels
-- Low stock threshold configuration
-
-### Customers Table
-- Customer and vehicle information
-- Sales history tracking
-
-### Employees Table
-- Employee details and positions
-- Salary and contact information
-
-### Expenses Table
-- Expense tracking and categorization
-- Financial monitoring
-
-### Sales Table
-- Sales transactions
-- Links to fuel, customer, and employee
-
-## 🧪 Testing
-
-Run the test suite:
-```bash
-mvn test
-```
-
-## 📝 API Endpoints
-
-### Public Endpoints
-- `GET /` - Redirect to dashboard
-- `GET /login` - Login page
-- `POST /login` - Login form submission
-- `GET /register` - Registration page
-- `POST /register` - User registration
-
-### Authenticated Endpoints
-- `GET /dashboard` - Dashboard
-- `GET /fuels` - Fuel management
-- `GET /sales` - Sales management
-- `GET /customers` - Customer management
-- `GET /employees` - Employee management
-- `GET /expenses` - Expense management
-- `GET /reports` - Reports section
-
-### Admin Only Endpoints
-- `GET /admin/users` - User management
-
-## 🐛 Troubleshooting
-
-### Database Connection Issues
-- Ensure MySQL is running
-- Check database credentials in application.properties
-- Verify database exists
-
-### Port Already in Use
-- Change server port in application.properties:
-```properties
-server.port=8081
-```
-
-### Build Errors
-- Ensure Java 8+ is installed
-- Verify Maven is properly configured
-- Clean and rebuild: `mvn clean install`
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these steps:
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 👥 Authors
-
-- Your Name - Initial work
-
-## 🙏 Acknowledgments
-
-- Spring Boot documentation
-- Thymeleaf documentation
-- Bootstrap 5 framework
-- Font Awesome icons
-
-## 📞 Support
-
-For support, please open an issue in the repository or contact the development team.
+# ⛽ Petrol Pump Management System
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Java-8-orange?style=for-the-badge&logo=java" alt="Java 8">
+  <img src="https://img.shields.io/badge/Spring%20Boot-2.7.18-brightgreen?style=for-the-badge&logo=springboot" alt="Spring Boot">
+  <img src="https://img.shields.io/badge/Thymeleaf-3.0-green?style=for-the-badge&logo=thymeleaf" alt="Thymeleaf">
+  <img src="https://img.shields.io/badge/MySQL-8.0-blue?style=for-the-badge&logo=mysql" alt="MySQL">
+  <img src="https://img.shields.io/badge/Bootstrap-5-purple?style=for-the-badge&logo=bootstrap" alt="Bootstrap">
+</p>
+
+<p align="center">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=25&duration=3000&pause=1000&center=true&vCenter=true&width=700&lines=Petrol+Pump+Management+System;Fuel+Inventory+Management;Sales+%26+Billing;Employee+%26+Customer+Management;Reports+%26+Analytics" alt="Typing Animation">
+</p>
+
+<p align="center">
+  <b>🚀 A complete web-based solution for modern petrol pump operations</b>
+</p>
 
 ---
 
-**Note**: This is a college project and can be freely used for educational purposes.
-#   P e t r o l - P u m p - M a n a g e m e n t - S y s t e m -  
- #   P e t r o l - P u m p - M a n a g e m e n t - S y s t e m -  
- #   P e t r o l - P u m p - M a n a g e m e n t - S y s t e m -  
- 
+## ✨ Features
+
+<table>
+<tr>
+<td width="50%">
+
+### 🔐 Authentication
+- Secure Login/Logout
+- Admin & Staff roles
+- BCrypt password encryption
+- Role-based authorization
+
+</td>
+<td width="50%">
+
+### ⛽ Fuel Management
+- Petrol & Diesel management
+- Stock tracking
+- Price management
+- Low-stock alerts
+
+</td>
+</tr>
+
+<tr>
+<td width="50%">
+
+### 💰 Sales & Billing
+- Automatic bill calculation
+- Cash / Card / UPI
+- Automatic stock deduction
+- Customer information
+
+</td>
+<td width="50%">
+
+### 📊 Reports
+- Sales reports
+- Expense reports
+- Fuel stock reports
+- Profit & loss analysis
+
+</td>
+</tr>
+</table>
+
+---
+
+## 🏗️ System Workflow
+
+```text
+                 👤 USER
+                    │
+                    ▼
+             🔐 LOGIN SYSTEM
+                    │
+                    ▼
+              📊 DASHBOARD
+                    │
+        ┌───────────┼───────────┐
+        ▼           ▼           ▼
+     ⛽ FUEL      💰 SALES     👥 USERS
+   MANAGEMENT    & BILLING   MANAGEMENT
+        │           │           │
+        └───────────┼───────────┘
+                    ▼
+              🗄️ MySQL
+                    │
+                    ▼
+             📈 REPORTS
