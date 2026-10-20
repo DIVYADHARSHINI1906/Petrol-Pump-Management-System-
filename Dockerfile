@@ -3,12 +3,11 @@
 FROM maven:3.9.6-eclipse-temurin-17-alpine AS builder
 WORKDIR /app
 
-# Cache dependencies
+# Copy pom.xml and source code
 COPY pom.xml .
-RUN mvn dependency:go-offline -B
-
-# Copy source and build JAR
 COPY src ./src
+
+# Build JAR package
 RUN mvn clean package -DskipTests
 
 # Stage 2: Runtime Image
@@ -23,7 +22,6 @@ USER appuser
 COPY --from=builder /app/target/petrol-pump-management-*.jar app.jar
 
 ENV PORT=8080
-ENV SPRING_PROFILES_ACTIVE=prod
 
 EXPOSE 8080
 
