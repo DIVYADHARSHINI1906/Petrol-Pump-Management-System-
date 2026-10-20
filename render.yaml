@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: petrol-pump-management
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: DATABASE_URL
+        fromDatabase:
+          name: petrolpump-db
+          property: connectionString
+
+databases:
+  - name: petrolpump-db
+    plan: free
+    region: oregon
+    databaseName: petrol_pump_db
+    user: petroluser
