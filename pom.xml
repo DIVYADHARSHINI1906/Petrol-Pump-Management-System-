@@ -78,6 +78,12 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+        <!-- Thymeleaf Spring Security Extras -->
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+        </dependency>
+
         <!-- Bootstrap 5 for styling -->
         <dependency>
             <groupId>org.webjars</groupId>
